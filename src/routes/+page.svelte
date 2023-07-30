@@ -6,7 +6,6 @@
     import Loader from "$components/Loader.svelte";
     import GatewayTimeout from "$components/GatewayTimeout.svelte";
 
-
     let key = "";
     let category = "";
 
