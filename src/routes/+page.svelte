@@ -1,2 +1,13 @@
-<h1>Welcome to SvelteKit</h1>
-<p>Visit <a href="https://kit.svelte.dev">kit.svelte.dev</a> to read the documentation</p>
+<script lang="ts">
+    import Navbar from "$components/Navbar.svelte";
+    import Footer from "$components/Footer.svelte";
+    import PlantsGrid from "$components/PlantsGrid.svelte";
+    import PlantCategory from "$components/PlantCategory.svelte";
+</script>
+
+<main>
+    <Navbar/>
+    <PlantCategory/>
+    <PlantsGrid/>
+    <Footer/>
+</main>
