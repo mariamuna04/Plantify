@@ -1,4 +1,5 @@
 import {writable, type Writable} from "svelte/store";
+import type {Cookie} from "@sveltejs/kit/src/runtime/server/page/types";
 
 export const toast = writable({
     title: '',
@@ -6,7 +7,5 @@ export const toast = writable({
     isOpen: false,
 });
 export const cartArray = writable([]);
-
-export const loginSession = <Writable<Cookie>> writable(undefined);
 
 export const googleInitialized = writable(false);
