@@ -1,9 +1,9 @@
 <script lang="ts">
     import Navbar from "$components/Navbar.svelte";
     import Footer from "$components/Footer.svelte";
-    import PlantsGrid from "$components/PlantsGrid.svelte";
-    import PlantCategory from "$components/PlantCategory.svelte";
-    import Loader from "$components/Loader.svelte";
+    import PlantsGrid from "./PlantsGrid.svelte";
+    import PlantCategory from "./PlantCategory.svelte";
+    import Loader from "./Loader.svelte";
     import GatewayTimeout from "$components/GatewayTimeout.svelte";
 
     let key = "";
