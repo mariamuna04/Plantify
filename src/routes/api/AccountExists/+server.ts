@@ -1,7 +1,7 @@
 import {closeMongoConnection, connectToMongo} from "$lib/server/mongoDatabase/database";
-import ConsolePrintWarn, {ConsolePrintError, ConsolePrintOK} from "$lib/server/ConsolePrint";
+import {ConsolePrintError, ConsolePrintOK, ConsolePrintWarn} from "$lib/server/ConsolePrint";
 
-export const POST = async ({request}:any) => {
+export const POST = async ({request}: any) => {
     const data = await request.json();
     const email = data.email;
 

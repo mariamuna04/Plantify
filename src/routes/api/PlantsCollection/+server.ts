@@ -6,7 +6,8 @@ export const GET = async () => {
 
         const database = await connectToMongo();
         const flowersCollection = database.collection('plants');
-        const flowers = await flowersCollection.find({}).toArray();
+        // sort by name
+        const flowers = await flowersCollection.find().sort({name: 1}).toArray();
 
         if (flowers) {
             ConsolePrintOK("PlantsCollection API RESPONSE: status 200")

@@ -1,5 +1,5 @@
-<script>
-    import "/src/tailwind.css";
+<script lang="ts">
+    import '/src/tailwind.css'
 </script>
 
 <slot/>

@@ -7,9 +7,5 @@
         <div class="flex flex-col justify-center align-middle items-center col-span-full row-span-full w-full mx-auto h-full">
             <img class=" h-[30rem] object-contain" src="{gateway_timeout}" alt=""/>
         </div>
-
     </div>
 </main>
-
-
-

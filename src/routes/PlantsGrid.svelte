@@ -1,8 +1,11 @@
 <script lang="ts">
-    export let plantList;
+
+    // Variable plantList holds all the plant data
+    export let plantList: Array<Plant>;
     import plant_not_found from '$lib/assets/plant_not_found.svg';
 </script>
 
+<!-- Front end -->
 <main class="container mx-auto px-8 md:px-12 pb-20 pt-12">
     <div class="flex flex-col md:grid md:grid-cols-2 gap-6 lg:grid-cols-4 mt-4">
         {#if plantList.length === 0}

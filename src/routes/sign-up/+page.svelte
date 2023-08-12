@@ -6,20 +6,22 @@
 
     let email_error_message = 'Please enter a valid email address';
 
-    const userProperties: UserProperties = {
-        firstName: '',
-        lastName: '',
+    const user: User = {
+        name: '',
         email: '',
         password: '',
     };
 
-    let isFirstNameValid;
-    let isLastNameValid;
+    let firstName = '';
+    let lastName = '';
+
+    let isFirstNameValid: boolean;
+    let isLastNameValid: boolean;
     let isEmailValid = false;
     let isPasswordValid = false;
 
-    $: isFirstNameValid = userProperties.firstName !== '';
-    $: isLastNameValid = userProperties.lastName !== '';
+    $: isFirstNameValid = firstName !== '';
+    $: isLastNameValid = lastName !== '';
 
     let password = '';
     let confirm_password = '';
@@ -30,17 +32,18 @@
             return;
         }
         try {
-            userProperties.password = password;
-            const response = await fetch('/api/SignUpAPI', {
+            user.password = password;
+            user.name = firstName + ' ' + lastName;
+            const response = await fetch('/api/SignUp', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify(userProperties)
+                body: JSON.stringify(user)
             });
 
             if (response.ok) {
-                await goto('/login');
+                await goto('/sign-in');
             } else {
                 alert('profile creation failed')
             }
@@ -53,7 +56,7 @@
         document.title = 'Sign Up | Plantify';
     });
 
-    const validateEmail = async (event) => {
+    const validateEmail = async (event: any) => {
         const email = event.target.value;
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!emailRegex.test(email) && email !== '') {
@@ -67,30 +70,33 @@
         }
     };
 
-    const handlePasswordMatch = (event) => {
+    const handlePasswordMatch = (event: any) => {
         if (event.target.value !== password && event.target.value !== '') {
-            document.getElementById('password').classList.add('border-red-400');
+            document.getElementById('password')!.classList.add('border-red-400');
             event.target.classList.add('border-red-400');
-            document.getElementById('password_mismatch').classList.remove('invisible');
+            document.getElementById('password_mismatch')!.classList.remove('invisible');
             isPasswordValid = false;
         } else {
-            document.getElementById('password').classList.remove('border-red-400');
+            document.getElementById('password')!.classList.remove('border-red-400');
             event.target.classList.remove('border-red-400');
-            document.getElementById('password_mismatch').classList.add('invisible');
+            document.getElementById('password_mismatch')!.classList.add('invisible');
             isPasswordValid = true;
         }
     }
 
-    const checkEmailExists = async (event) => {
+    const checkEmailExists = async (event: any) => {
+        if (!isEmailValid) {
+            return;
+        }
+        isEmailValid = false;
         const email = event.target.value;
-        console.log('checking email');
         event.target.classList.add('border-amber-600');
         event.target.classList.add('animate-pulse');
         event.target.nextElementSibling.classList.add('text-amber-600');
         event.target.nextElementSibling.classList.add('animate-pulse');
         event.target.nextElementSibling.classList.remove('invisible');
         email_error_message = 'Checking Email...';
-        document.getElementById('email').setAttribute('disabled', 'true');
+        document.getElementById('email')!.setAttribute('disabled', 'true');
         await fetch('/api/AccountExists', {
             method: 'POST',
             headers: {
@@ -103,7 +109,6 @@
                 event.target.nextElementSibling.classList.remove('text-amber-600');
                 event.target.classList.remove('animate-pulse');
                 event.target.nextElementSibling.classList.remove('animate-pulse');
-
                 event.target.classList.add('border-red-400');
                 event.target.nextElementSibling.classList.remove('invisible');
                 email_error_message = 'This email is already in use';
@@ -112,33 +117,30 @@
                 event.target.nextElementSibling.classList.remove('text-amber-600');
                 event.target.classList.remove('animate-pulse');
                 event.target.nextElementSibling.classList.remove('animate-pulse');
-
                 email_error_message = 'Please enter a valid email address';
                 event.target.classList.remove('border-red-400');
                 event.target.nextElementSibling.classList.add('invisible');
                 isEmailValid = true;
             }
-            document.getElementById('email').removeAttribute('disabled');
+            document.getElementById('email')!.removeAttribute('disabled');
         }).catch(() => {
             event.target.nextElementSibling.classList.remove('text-amber-600');
             event.target.classList.remove('animate-pulse');
             event.target.classList.remove('amber-red-600');
             console.log('error');
             event.target.nextElementSibling.classList.remove('animate-pulse');
-
-            document.getElementById('email').removeAttribute('disabled');
+            document.getElementById('email')!.removeAttribute('disabled');
         });
 
     }
 
 </script>
-
 <main class="flex items-center justify-center h-screen" id="body">
     <div class="mx-auto w-fit grid grid-cols-1 justify-between rounded-2xl xl:grid-cols-2
     bg-opacity-60 backdrop-blur-md shadow-2xl overflow-y-auto">
         <div class="p-12 bg-white flex flex-col align-middle justify-center bg-opacity-70 place-self-center w-full h-full">
-            <a href="/" class="w-fit mb-5 place-self-center xl:hidden outline-none"><img src="{logo}" alt=""
-                                                                                         class="w-32 outline-none"></a>
+            <a href="/" class="w-fit mb-5 place-self-center xl:hidden outline-none">
+                <img src="{logo}" alt="" class="w-32 outline-none"></a>
             <h1 class="text-3xl font-bold text-teal-800 text-center mb-4">
                 Hi there! <br> Welcome to Plantify!
             </h1>
@@ -153,7 +155,7 @@
                 <div class="grid-cols-2 grid gap-x-4 mb-4">
                     <div id="first_name_container">
                         <label for="first_name" class="block mb-2 text-sm font-medium text-gray-900 ">First Name</label>
-                        <input required bind:value={userProperties.firstName}
+                        <input required bind:value={firstName}
                                type="text" id="first_name"
                                class="bg-gray-50 border font-mono border-gray-300 text-gray-900 text-sm rounded-full outline-none
                                focus:shadow-md block w-full p-2.5 text-center transition-all duration-300 antialiased">
@@ -161,7 +163,7 @@
 
                     <div id="last_name_container">
                         <label for="last_name" class="block mb-2 text-sm font-medium text-gray-900 ">Last Name</label>
-                        <input required bind:value={userProperties.lastName}
+                        <input required bind:value={lastName}
                                type="text" id="last_name"
                                class="bg-gray-50 border font-mono border-gray-300 text-center text-gray-900 text-sm rounded-full outline-none
                                focus:shadow-md w-full p-2.5 transition-all duration-300 antialiased">
@@ -169,7 +171,7 @@
                 </div>
 
                 <label for="email" class="block  mb-2 text-sm font-medium text-gray-900 ">Your Email</label>
-                <input required bind:value={userProperties.email} on:input={validateEmail} on:blur={checkEmailExists}
+                <input required bind:value={user.email} on:input={validateEmail} on:blur={checkEmailExists}
                        type="text" id="email"
                        class="bg-gray-50 border font-mono border-gray-300 text-gray-900 text-sm rounded-full outline-none
                        focus:shadow-md block w-full p-2.5 transition-all duration-300 antialiased px-4"
@@ -215,10 +217,10 @@
                             Create Account
                         </button>
                     {:else }
-                        <button disabled type="submit"
-                                class="place-self-center disabled:shadow-none font-black outline-none border-2 text-zinc-600
-                            rounded-full w-fit text-sm px-10 py-3 transition-all duration-300 antialiased">
-                            Fill in the form correctly
+                        <button disabled
+                                class="place-self-center  bg-gray-300 text-white font-black outline-none
+                                rounded-full w-fit text-sm px-10 py-3 text-center transition-all duration-300 antialiased">
+                            Create Account
                         </button>
                     {/if}
                 </div>

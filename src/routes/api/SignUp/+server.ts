@@ -1,24 +1,25 @@
 import {closeMongoConnection, connectToMongo} from "$lib/server/mongoDatabase/database";
-import ConsolePrintWarn, {ConsolePrintError, ConsolePrintOK} from "$lib/server/ConsolePrint";
+import {ConsolePrintWarn, ConsolePrintError, ConsolePrintOK} from "$lib/server/ConsolePrint";
 
-export const POST = async ({request}:any) => {
-    const userProperties:UserProperties = await request.json();
+export const POST = async ({request}: any) => {
+    const user: User = await request.json();
 
     try {
         const database = await connectToMongo();
         const usersCollection = database.collection('users');
+
         const query = {
-            email: userProperties.email,
-            password: userProperties.password,
-            firstName: userProperties.firstName,
-            lastName: userProperties.lastName,
+            name: user.name,
+            email: user.email,
+            password: user.password,
+            token: null,
         };
 
         const success = await usersCollection.insertOne(query);
 
         if (success) {
             ConsolePrintOK("SignUpAuthentication API RESPONSE: status 200")
-            return new Response(JSON.stringify(userProperties), {status: 200})
+            return new Response(JSON.stringify(user), {status: 200})
         } else {
             ConsolePrintWarn("SignUpAuthentication API RESPONSE: status 401")
             return new Response(JSON.stringify(null), {status: 401})
