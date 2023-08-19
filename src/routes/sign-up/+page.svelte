@@ -34,7 +34,7 @@
         try {
             user.password = password;
             user.name = firstName + ' ' + lastName;
-            const response = await fetch('/api/SignUp', {
+            const response = await fetch('/api/authentication/SignUp', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -97,7 +97,7 @@
         event.target.nextElementSibling.classList.remove('invisible');
         email_error_message = 'Checking Email...';
         document.getElementById('email')!.setAttribute('disabled', 'true');
-        await fetch('/api/AccountExists', {
+        await fetch('/api/authentication/AccountExists', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

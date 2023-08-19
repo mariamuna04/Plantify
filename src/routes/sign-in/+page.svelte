@@ -24,7 +24,7 @@
         try {
             // Send credentials to server and await response
             // Server response : {token: token, name: name, email: email}
-            const response = await fetch('/api/SignIn', {
+            const response = await fetch('/api/authentication/SignIn', {
                 method: 'POST',
                 body: JSON.stringify(credentials),
                 headers: {

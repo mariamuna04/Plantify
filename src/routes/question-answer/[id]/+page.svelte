@@ -1,79 +1,91 @@
 <script lang="ts">
-    import {Session} from "../Session.js";
     import {onMount} from "svelte";
+    import {Session} from "../../Session";
     import Navbar from "$lib/components/Navbar.svelte";
-    import Footer from "$lib/components/Footer.svelte";
-    import Loader from "./Loader.svelte";
+    import Loader from "../../Loader.svelte";
+    import ReplyGrid from "./ReplyGrid.svelte";
     import GatewayTimeout from "$lib/components/GatewayTimeout.svelte";
-    import QuestionAnswerGrid from "./QuestionAnswerGrid.svelte";
-    import question_answer from '$lib/assets/question-answer.svg';
+    import Footer from "$lib/components/Footer.svelte";
 
     let status: number = 401;
-    let question: string;
 
-    export let data: any;
+    export let data;
+    let question = JSON.parse(data.question);
+    let fetchedReply = JSON.parse(data.reply);
+    let reply: string = "";
 
     onMount(async () => {
-        data = await fetch('/api/QuestionAnswer').then((response) => {
-            if (response.ok) return response.json();
-            else return null;
-        }).catch(() => {
-            status = 500;
-        });
+        console.log(fetchedReply)
 
-        // If the initial plant list is not null, set the status code to 200 and handle the category
-        // because user might have selected a category before the plants were fetched
-        if (data) {
+
+        if (await fetchedReply) {
             status = 200;
         } else status = 404;
-
-        // sort the data by likes
-        data.sort((a: any, b: any) => {
-            return b.likes - a.likes;
-        });
-
     });
 
 
-    const submit = async () => {
-        const questionObj: Question = {
+    const onReplyClick = async () => {
+        const answerObject: Answer = {
             _id: "",
             name: Session.getName(),
+            parentQuestionId: question._id,
             email: Session.getEmail(),
-            body: question,
+            body: reply,
         }
 
-        if (!questionObj.body) return alert("Please write something");
+        if (!answerObject.body) return alert("Please write something");
 
-        data = await fetch('/api/QuestionAnswer/AskQuestion', {
+        await fetch('/api/QuestionAnswer/ReplyQuestion', {
             method: 'POST',
-            body: JSON.stringify(questionObj),
+            body: JSON.stringify(answerObject),
             headers: {
                 'Content-Type': 'application/json'
             }
         });
+        // reload the page
         location.reload();
     }
 
-</script>
+    function generateRandomNumber(): number {
+        return Math.floor(Math.random() * 100);
+    }
 
+
+</script>
 
 <main>
     <Navbar/>
 
     <div class="container mx-auto px-8 md:px-32 pt-12">
-        <div class="grid grid-cols-2 place-items-start gap-x-4">
-            <img src="{question_answer}" alt="">
+
+        <div class="flex gap-2">
+            <img class='w-12 h-12 mr-2 rounded-full'
+                 src='https://api.dicebear.com/6.x/avataaars/svg?seed={generateRandomNumber()}%20Hill&backgroundColor=b6e3f4,c0aede,d1d4f9'
+                 height='48px' width='48px' alt="">
+            <div class="flex flex-col">
+                <div class="flex gap-2">
+                    <h1 class="font-black">{question.name}</h1>
+                    <h1 class="text-zinc-500 font-bold">&bull; Author</h1>
+                </div>
+                <h1 class="font-light text-zinc-600">{question.email}</h1>
+            </div>
+        </div>
+
+        <div class="text-4xl font-black mt-6">{question.body}</div>
+
+        <hr class="mt-4  ">
+
+        <div class="grid grid-cols-1 place-items-start gap-x-4">
             <div class="p-2 flex flex-col gap-3 w-full">
-                <h1 class="text-3xl font-bold pt-8 pb-2 text-amber-600">Ask a Question... <br>Get Expert Answers!</h1>
-                <textarea
-                        class="px-4 py-4 shadow-xl rounded-2xl w-full mb-8 mt-4 border border-zinc-300 focus:outline-none focus:ring-2 focus:ring-amber-600 focus:border-transparent"
-                        bind:value={question} placeholder="Write your questions here..."></textarea>
+                <h1 class="text-3xl font-bold pt-8 text-green-900">Share your thoughts about this question...</h1>
+                <textarea bind:value={reply}
+                        class="px-4 py-4 shadow-xl rounded-2xl w-full mb-2 mt-4 border border-zinc-300 focus:outline-none focus:ring-2 focus:ring-green-900 focus:border-transparent"
+                        placeholder="Reply to this question..."></textarea>
 
                 <button class="font-bold text-white bg-green-900 py-2 px-4 w-fit rounded-full items-end"
-                        on:click={submit}>
+                on:click={onReplyClick}>
                     <span class="flex gap-2 items-center align-middle justify-center">
-                        <span>Ask to the community</span>
+                        <span>Reply</span>
                         <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="18" height="18"
                              viewBox="0,0,256,256"
                              style="fill:#fff;">
@@ -88,22 +100,17 @@
                 </button>
             </div>
         </div>
+
     </div>
-
-    <h1 class=" container mx-auto px-12 font-black text-3xl my-8  mb-8 text-zinc-500">
-        Questions asked by others
-    </h1>
-
 
     {#if status === 401}
         <Loader/>
     {:else if status === 200}
-        <QuestionAnswerGrid bind:questions={data}/>
+        <ReplyGrid bind:experiences={fetchedReply}/>
     {:else}
         <GatewayTimeout/>
     {/if}
 
 
     <Footer/>
-
 </main>
