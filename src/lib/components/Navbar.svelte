@@ -29,7 +29,7 @@
         if(!isAuthenticated) return;
 
         // remove database token
-        const response = await fetch('/api/SignOut', {
+        const response = await fetch('/api/authentication/SignOut', {
             method: 'POST',
             body: JSON.stringify({email: Session.getEmail(), token: Session.getToken()}),
             headers: {
