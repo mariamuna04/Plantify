@@ -5,7 +5,7 @@ export const GET = async () => {
     try {
         const database = await connectToMongo();
         const questionsData = database.collection('questionAnswer');
-        const questions = await questionsData.find().sort({name: 1}).toArray();
+        const questions = await questionsData.find({parentQuestionID: null}).sort({name: 1}).toArray();
 
         if (questions) {
             ConsolePrintOK("PlantsCollection API RESPONSE: status 200")
