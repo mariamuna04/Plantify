@@ -1,5 +1,5 @@
-import {closeMongoConnection, connectToMongo} from "../../../../../../../Plantify/src/lib/server/mongoDatabase/database";
-import {ConsolePrintError, ConsolePrintOK} from "../../../../../../../Plantify/src/lib/server/ConsolePrint";
+import {closeMongoConnection, connectToMongo} from "$lib/server/mongoDatabase/database";
+import {ConsolePrintError, ConsolePrintOK} from "$lib/server/ConsolePrint";
 
 export const POST = async ({request}:any) => {
     const user = await request.json();

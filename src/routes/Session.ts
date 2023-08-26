@@ -3,6 +3,7 @@ export const Session = {
         const session: UserSession = JSON.parse(sessionStorage.getItem('session') || '{}');
         return session.token;
     },
+
     setToken: (token: string) => {
         const session: UserSession = JSON.parse(sessionStorage.getItem('session') || '{}');
         session.token = token;
