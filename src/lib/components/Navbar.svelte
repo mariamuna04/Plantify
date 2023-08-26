@@ -15,18 +15,17 @@
     };
 
     // let session: UserSession | undefined = undefined;
-    let isAuthenticated:boolean = false;
+    let isAuthenticated: boolean = false;
 
     onMount(() => {
-        const token = Session.getToken();
-        if (token !== undefined) {
+        if (Session.getToken() !== undefined) {
             isAuthenticated = true;
         }
     });
 
     const logoutButtonAction = async () => {
         // if already logged out, do nothing
-        if(!isAuthenticated) return;
+        if (!isAuthenticated) return;
 
         // remove database token
         const response = await fetch('/api/authentication/SignOut', {
@@ -58,7 +57,7 @@ to-emerald-100 from-green-50">
 
     <form class="place-self-center">
         <input type="text" placeholder="Search Anything"
-               class="px-4 py-2 border border-gray-300 rounded-full
+               class="px-4 py-2 border border-gray-300 rounded-full w-[400px]
                focus:outline-none focus:ring-2 focus:ring-teal-600 text-center
                focus:border-transparent hover:shadow-md duration-300 transition-all focus:placeholder-white"
                bind:value={searchKey} on:input={handleSearchKeyChange}
@@ -67,14 +66,13 @@ to-emerald-100 from-green-50">
 
     {#if (isAuthenticated)}
         <div class="flex gap-4 place-self-end">
-            <a class="mx-4 my-2" href="/dashboard">{Session.getName()}</a>
-            <button class="mx-4 my-2" on:click={logoutButtonAction}>Logout</button>
+            <a class="px-4 py-2 hover:bg-green-950 rounded-full hover:text-white transition-all duration-300" href="/dashboard">Dashboard</a>
+            <button class="px-4 text-red-800 py-2 hover:bg-red-800 rounded-full hover:text-white transition-all duration-300" on:click={logoutButtonAction}>Logout</button>
         </div>
     {:else}
         <div class="flex gap-4 place-self-end">
-            <a class="mx-4 my-2" href="/sign-in">Sign In</a>
+            <a class="px-4 my-2" href="/sign-in">Sign In</a>
             <a class="px-4 py-2 text-white bg-teal-700 rounded-full" href="/sign-up">Get Started</a>
         </div>
     {/if}
-
 </nav>
