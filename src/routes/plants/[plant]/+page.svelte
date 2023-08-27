@@ -17,6 +17,13 @@
 <Navbar/>
 <main>
     <div class="container mx-auto px-12 md:px-36 mb-24">
+        <div class="mt-12  w-full grid grid-cols-3 gap-x-2">
+            <img src="{flower.img1}" alt="">
+            <img src="{flower.img2}" alt="">
+            <img src="{flower.img3}" alt="">
+        </div>
+
+
         <div class="grid grid-cols-3 gap-x-12">
             <div class="flex flex-col gap-2 justify-center col-span-2">
                 <svg class="w-full h-fit">
@@ -97,6 +104,8 @@
                 </div>
             </div>
         </div>
+
+
         <div class="col-span-2">
             <div class="mt-6 flex flex-col">
                 <h1 class="text-3xl font-black">
@@ -138,7 +147,7 @@
 
     <Review bind:plant_id={flower._id}/>
 
-    <section class="my-20"> </section>
+    <section class="my-20"></section>
 </main>
 <Footer/>
 
