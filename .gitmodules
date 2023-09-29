@@ -1,0 +1,3 @@
+[submodule "Plantify-Image-Recognition"]
+	path = Plantify-Image-Recognition
+	url = https://github.com/tinykishore/Plantify-Image-Recognition.git
